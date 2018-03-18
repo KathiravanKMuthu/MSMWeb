@@ -1,0 +1,239 @@
+.;/l'[;]<!DOCTYPE html>
+<html ng-app="MSMApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <title>VMM Admin | Dashboard</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- Bootstrap datetime picket -->
+    <link rel="stylesheet" href="../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini" ng-controller="mainController as vm">
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index2.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>VMM</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>VMM</b> Dashboard</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+          <li class="dropdown messages-menu">
+            <a href="admin_logout.php" onclick="return openURL('admin_logout.php');" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-sign-out fa-1 x"></i>Logout
+            </a>
+          </li>
+        </ul>      
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="images/vmm.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>VMM Admin</p>
+          <a href="#"><i class="fa fa-circle text-success"></i>{{date | date:'dd-MMM-yyyy'}}</a>
+        </div>
+      </div>
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+        <li class="treeview">
+          <a href="messages.html" onclick="return openURL('messages.html');"><i class="fa fa-list"></i> <span>Daily Devotion</span></a>
+        </li>
+        <li class="treeview">
+          <a href="special_messages.html" onclick="return openURL('special_messages.html');"><i class="fa fa-video-camera"></i> <span>Special Messages</span></a>
+        </li>
+        <li class="active treeview">
+          <a href="events_scheduler.html" onclick="return openURL('events_scheduler.html');"><i class="fa fa-calendar"></i> <span>Events</span></a>
+        </li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->7
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-12 connectedSortable">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Daily Devotion</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" name="msgForm">
+              <div class="box-body">
+                <div class="form-group">
+                    <span class="info" ng-show="successMsg">{{successMsg}}</span>
+                    <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+                </div>
+                <div class="form-group">
+                  <label for="inputTitle">Name</label>
+                  <input type="text" class="form-control" placeholder="Enter Title" ng-model="vm.title" required>
+                </div>
+                <div class="form-group">
+                  <label for="inputDescription">Details</label>
+                  <textarea class="form-control" rows="5" placeholder="Enter Description..." ng-model="vm.description" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="inputImageFile">Image:</label>
+                  <input type="file" ngf-select ng-model="picture" name="imageFile" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile" class="btn btn-success">
+                  <i ng-show="msgForm.file.$error.required">*required</i><br>
+                  <i ng-show="msgForm.file.$error.maxSize">File too large {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                  <img ng-show="msgForm.file.$valid" ngf-thumbnail="picture" class="thumb"> <button ng-click="picture = null" ng-show="picture" class="btn btn-danger">Remove</button>
+                </div>
+                <div class="form-group">
+                  <label for="inputPlace">Place</label>
+                  <input type="text" class="form-control" placeholder="Enter Place" ng-model="vm.event_place" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputDateTime">Date & Time:</label>
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" id="dt1" class="form-control input-sm"
+                                       datetimepicker
+                                       ng-model="vm.event_date"
+                                       placeholder="DD-MMM-YYYY HH:mm"
+                                       name="time">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="button" class="btn btn-success btn-md" ng-disabled="!msgForm.$valid" ng-model="vm.buttonInsert" ng-click="vm.callInsert(picture)">Add Event</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.box -->
+          <!-- Custom tabs (Charts with tabs)-->
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Published History</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table datatable="" ng-model="vm.clientLength" class="table table-bordered table-striped" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs"
+                   dt-columns="vm.dtColumns" dt-instance="vm.dtInstance"></table>
+            </div>
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </section>
+        <!-- /.Left col -->
+        <!-- right col -->
+      </div>
+      <!-- /.row (main row) -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 1.0.0
+    </div>
+    <strong>Powered by <a href="https://herald-globe.com">Heral Globe</a>.</strong>
+  </footer>
+
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- daterangepicker -->
+<script src="../bower_components/moment/min/moment.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-route.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-animate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-resource.min.js"></script>
+
+<script src="js/angularDatatables/angular-datatables.directive.js"></script>
+<script src="js/angularDatatables/angular-datatables.instances.js"></script>
+<script src="js/angularDatatables/angular-datatables.util.js"></script>
+<script src="js/angularDatatables/angular-datatables.renderer.js"></script>
+<script src="js/angularDatatables/angular-datatables.factory.js"></script>
+<script src="js/angularDatatables/angular-datatables.options.js"></script>
+<script src="js/angularDatatables/angular-datatables.js"></script>
+
+<script src="js/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
+<script src="js/ng-file-upload.min.js"></script>
+
+  <script src="js/events_scheduler.js"></script>
+
+<script type="text/javascript" src="../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-bootstrap-datetimepicker-directive/angular-bootstrap-datetimepicker-directive.min.js"></script>
+
+<script type="text/javascript">
+  function openURL(url)
+  {
+      var modifiedArray = [];
+      var pathArray = window.location.href.split( '/' );
+      for(var i=0; i < (pathArray.length-1); i++)
+      {
+          modifiedArray.push(pathArray[i]);
+      }
+      window.location.href = modifiedArray.join("/") + "/" + url;
+  }
+</script>
+
+</body>
+</html>

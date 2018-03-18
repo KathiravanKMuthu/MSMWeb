@@ -1,4 +1,5 @@
 <?php
+
 // required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -15,14 +16,15 @@ $db = $database->getConnection();
 $messages = new MSMMessages($db);
  
 // query MSMMessagess
-$stmt = $messages->getAllMessages();
-$param_count = isset($_GET['count']) ? (int)$_GET['count'] : 0;
+$limit_count = isset($_GET['count']) ? (int)$_GET['count'] : 20;
+$offset_count = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+
+$stmt = $messages->getAllMessages($offset_count, $limit_count);
 
 // MSMMessagess array
 $messages_arr=array();
 
-$count = 0;
-while ($row = $stmt->fetch_assoc	()){
+while ($row = $stmt->fetch_assoc()){
 	// extract row
 	// this will make $row['name'] to
 	// just $name only
@@ -33,16 +35,13 @@ while ($row = $stmt->fetch_assoc	()){
 		"title" => $title,
 		"description" => html_entity_decode($description),
 		"picture" => $picture,
+		"message_type" => $message_type,
 		"message_status" => $message_status,
 		"time_created" => $time_created,
 		"time_delivered" => $time_delivered
 	);
 
-	array_push($messages_arr, $MSMMessages_item);
-	$count++;
-	
-	if(($param_count > 0) && ($count == $param_count))
-		break;
+	array_push($messages_arr, $MSMMessages_item);	
 }
 
 $database->closeConnection();

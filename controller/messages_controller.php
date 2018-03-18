@@ -76,11 +76,11 @@ class MessagesController extends SimpleRest {
 			echo $response;
 		}
 	}
-	public function createMessage($title, $description, $picture) {
+	public function createMessage($title, $description, $picture, $message_type) {
 
 		$messages = new MSMMessages();
 		$status = "DELIVERED";
-		$rawData = $messages->createMessage($title, $description, $picture, $status);
+		$rawData = $messages->createMessage($title, $description, $picture, $message_type, $status);
 
 		if(empty($rawData)) {
 			$statusCode = 404;

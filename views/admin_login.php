@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 	else
 	{
-		header("location: admin_dashboard.php");
+		header("location: messages.html");
 	}
 }
 ?>
