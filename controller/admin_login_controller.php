@@ -20,7 +20,7 @@ class AdminLoginController {
 
 		// Validate credentials
 		if(empty($error_message)){
-			if(($username == "msmadmin") && ($password == "dqadmin")) {
+			if(($username == "mediavmm") && ($password == "Jesus123!@#")) {
 				$_SESSION['username']=$username;
 			} else{
 				$error_message = $error_message . "Invalid credentials. Please enter the right one.<br/>";
