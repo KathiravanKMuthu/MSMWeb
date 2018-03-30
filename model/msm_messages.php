@@ -23,7 +23,7 @@ class MSMMessages{
         $this->conn = $db;
     }
 		
-	public function sendPushNotification($title, $message_type)
+	public function sendPushNotification($title, $message_type, $picture)
 	{
 		$content = array(
 			"en" => $title
@@ -46,6 +46,11 @@ class MSMMessages{
 		$fields = array(
 			'app_id' => "e078180f-bd0d-422e-b87d-0287113db9fd",
 			'included_segments' => array('Active Users'),
+			'big_picture' => 'http://herald-globe.com/MSMWeb/views/images/'. $picture,
+			'large_icon' => 'http://herald-globe.com/MSMWeb/views/images/vmm.jpg',
+			'small_icon' => 'http://herald-globe.com/MSMWeb/views/images/vmm.jpg',
+			'android_accent_color' => 'FF0000FF',
+			'android_led_color' => 'FFFF0000',
 			'data' => array("key" => "VMM"),
 			'contents' => $content,
             'headings' => $heading
@@ -76,14 +81,14 @@ class MSMMessages{
 		$query = "INSERT INTO msm_messages(title, description, picture, message_payload, message_type, message_status, time_delivered) VALUES(?,?,?,?,?,?,NOW())";
 	 
 		// prepare query statement
-		//if($stmt = $this->conn->prepare($query))
+		try
 		{
 			$stmt = $this->conn->prepare($query);
 			$stmt->bind_param('ssssss',$title,$description,$picture,$message_payload,$message_type,$message_status);
 			// execute query
 			if($stmt->execute())
 			{
-				$response = $this->sendPushNotification($title, $message_type);
+									//$response = $this->sendPushNotification($title, $message_type);
 				//$return["allresponses"] = $response;
 				//$return = json_encode( $return);
 				
@@ -92,16 +97,20 @@ class MSMMessages{
 				//print("\n");
 				return true;
 			}
+			echo (isset($stmt->error)) ? " | Error occurred : ". $stmt->error : "";	
+		}
+		catch(Exception $e)
+		{
+			echo 'Caught exception: ',  $e->getMessage(), "\n";
 		}
 		
-		echo (isset($stmt->error)) ? " | Error occurred : ". $stmt->error : "";	
 		return false;
 	}
 	
 	// read products
 	function getAllMessages($offset=0, $limit=10){
 		// select all query
-		$query = "SELECT * FROM msm_messages ORDER BY id DESC LIMIT " . $offset . ", " . $limit;
+		$query = "SELECT * FROM msm_messages WHERE message_status = 'DELIVERED' ORDER BY id DESC LIMIT " . $offset . ", " . $limit;
 
 		// prepare query statement
 		$stmt = $this->conn->prepare($query);
@@ -117,7 +126,7 @@ class MSMMessages{
 	public function getAllMessagesByType($msg_type, $offset=0, $limit=10)
 	{
 		// select all by message type
-		$query = "SELECT * FROM msm_messages WHERE message_type = ? ORDER BY id DESC LIMIT " . $offset . ", " . $limit;
+		$query = "SELECT * FROM msm_messages WHERE message_type = ? and message_status = 'DELIVERED' ORDER BY id DESC LIMIT " . $offset . ", " . $limit;
 
 		// prepare query statement
 		$stmt = $this->conn->prepare($query);
@@ -158,6 +167,26 @@ class MSMMessages{
 		$result = $stmt->get_result();
 		$stmt->close();
 		return $result;
+	}
+
+	function deleteMessage($id){
+				// select all query
+		$query = "UPDATE msm_messages SET message_status = 'REMOVED' WHERE id = ?";
+	 
+		// prepare query statement
+		$stmt = $this->conn->prepare($query);
+		$stmt->bind_param("i", $id);
+	 
+		// execute query
+		if($stmt->execute())
+		{
+			$stmt->close();
+			return true;
+		}
+		
+		echo (isset($stmt->error)) ? " | Error occurred : ". $stmt->error : "";	
+		$stmt->close();
+		return false;
 	}
 
 }

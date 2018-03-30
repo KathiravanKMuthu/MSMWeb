@@ -27,18 +27,19 @@ if(!isset($_POST['title']) || !isset($_POST['description']) || !isset($_FILES['p
 }
 
 $event_place = $_POST["eventPlace"];
-$event_date = $_POST["eventDate"];
+$event_start_date = $_POST["eventStartDate"];
+$event_end_date = $_POST["eventEndDate"];
 
 // get posted data
 $title = $_POST['title'];
 $description = $_POST['description'];
-$picture = $_FILES['picture']['name'];
+$picture = $_FILES['picture']['name'] . '_' . time() . '.JPG';
 $message_status = "DELIVERED";
 $message_type = "EVENT";
-$message_payload = '{ "event_place" : "' . $event_place . '", "event_date" : "' . $event_date . '"}';
+$message_payload = '{ "event_place" : "' . $event_place . '", "event_start_date" : "' . $event_start_date . '", "event_end_date" : "' . $event_end_date . '"}';
 
 $uploads_dir = '../views/images/';
-$uploadfile = $uploads_dir . basename($_FILES['picture']['name']);
+$uploadfile = $uploads_dir . basename($picture);
 
 if (move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {
 	// query MSMMessagess

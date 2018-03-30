@@ -111,8 +111,7 @@
             <form role="form" name="msgForm">
               <div class="box-body">
                 <div class="form-group">
-                    <span class="info" ng-show="successMsg">{{successMsg}}</span>
-                    <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+                      <flash-message duration="5000" show-close="true" name="flashForm"></flash-message>
                 </div>
                 <div class="form-group">
                   <label for="inputTitle">Name</label>
@@ -134,13 +133,25 @@
                   <input type="text" class="form-control" placeholder="Enter Place" ng-model="vm.event_place" required>
                 </div>
                 <div class="form-group">
-                    <label for="inputDateTime">Date & Time:</label>
-                        <div class="col-sm-12">
+                    <label for="inputDateTime">Date & Time:</label><br/>
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <input type="text" id="dt1" class="form-control input-sm"
                                        datetimepicker
-                                       ng-model="vm.event_date"
-                                       placeholder="DD-MMM-YYYY HH:mm"
+                                       ng-model="vm.event_start_date"
+                                       placeholder="From DD-MMM-YYYY HH:mm"
+                                       name="time">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" id="dt1" class="form-control input-sm"
+                                       datetimepicker
+                                       ng-model="vm.event_end_date"
+                                       placeholder="To DD-MMM-YYYY HH:mm"
                                        name="time">
                                 <span class="input-group-addon">
                                     <i class="glyphicon glyphicon-calendar"></i>
@@ -164,8 +175,11 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table datatable="" ng-model="vm.clientLength" class="table table-bordered table-striped" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs"
-                   dt-columns="vm.dtColumns" dt-instance="vm.dtInstance"></table>
+                <div class="form-group">
+                      <flash-message duration="5000" show-close="true" name="flashDataTable"></flash-message>
+                </div>
+                <table datatable="" ng-model="vm.clientLength" class="table table-bordered table-striped" dt-options="vm.dtOptions" 
+                    dt-column-defs="vm.dtColumnDefs" dt-columns="vm.dtColumns" dt-instance="vm.dtInstance"></table>
             </div>
           </div>
           <!-- /.nav-tabs-custom -->
@@ -183,7 +197,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0.0
     </div>
-    <strong>Powered by <a href="https://herald-globe.com">Heral Globe</a>.</strong>
+    <strong>Sponsred by <a href="https://herald-globe.com">Herald Globe</a>.</strong>
   </footer>
 
 <!-- ./wrapper -->
@@ -217,7 +231,8 @@
 <script src="js/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
 <script src="js/ng-file-upload.min.js"></script>
 
-  <script src="js/events_scheduler.js"></script>
+<script src="js/events_scheduler.js"></script>
+<script src="js/angularFlash/angular-flash.min.js"></script>
 
 <script type="text/javascript" src="../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-bootstrap-datetimepicker-directive/angular-bootstrap-datetimepicker-directive.min.js"></script>

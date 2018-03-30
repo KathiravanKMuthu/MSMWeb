@@ -29,13 +29,13 @@ if(!isset($_POST['title']) || !isset($_POST['description']) || !isset($_FILES['p
 // get posted data
 $title = $_POST['title'];
 $description = $_POST['description'];
-$picture = $_FILES['picture']['name'];
+$picture = $_FILES['picture']['name'] . '_' . time() . '.JPG';
 $message_status = "DELIVERED";
 $message_type = "IMAGE";
 $message_payload = "";
 
 $uploads_dir = '../views/images/';
-$uploadfile = $uploads_dir . basename($_FILES['picture']['name']);
+$uploadfile = $uploads_dir . basename($picture);
 
 if (move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {
 	// query MSMMessagess
